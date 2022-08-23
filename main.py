@@ -3,9 +3,9 @@ import sys
 
 recognizer = sr.Recognizer()
 
-sTText = ""
+finished = False
 
-while True:
+while not finished:
     try:
         with sr.Microphone() as mic:
             print("Listening...")
@@ -18,8 +18,9 @@ while True:
             print(f"Recognized: {sTText}")
 
             if sTText == "done":
-                sys.exit("\"Done\" recognized")
+                finished = True
 
     except sr.UnknownValueError():
         recognizer = sr.Recognizer()
         continue
+
