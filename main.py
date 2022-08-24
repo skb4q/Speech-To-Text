@@ -1,8 +1,8 @@
 import speech_recognition as sr
-import sys
+from gingerit.gingerit import GingerIt
 
 recognizer = sr.Recognizer()
-
+parser = GingerIt()
 finished = False
 
 while not finished:
@@ -13,14 +13,12 @@ while not finished:
             audio = recognizer.listen(mic)
 
             sTText = recognizer.recognize_google(audio)
-            sTText = sTText.lower()
 
-            print(f"Recognized: {sTText}")
-
-            if sTText == "done":
+            if sTText != "done":
+                print(f"Recognized: {parser.parse(sTText)['result']}")
+            else:
                 finished = True
 
     except sr.UnknownValueError():
         recognizer = sr.Recognizer()
         continue
-
