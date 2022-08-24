@@ -1,9 +1,11 @@
 import speech_recognition as sr
 from gingerit.gingerit import GingerIt
+from googletrans import Translator
 
 recognizer = sr.Recognizer()
 parser = GingerIt()
 finished = False
+translator = Translator()
 
 while not finished:
     try:
@@ -14,11 +16,21 @@ while not finished:
 
             sTText = recognizer.recognize_google(audio)
 
-            if sTText != "done":
-                print(f"Recognized: {parser.parse(sTText)['result']}")
-            else:
-                finished = True
+            cleanedText = parser.parse(sTText.capitalize())['result']
 
-    except sr.UnknownValueError():
-        recognizer = sr.Recognizer()
-        continue
+            if sTText.lower() == "stop":
+                print("Program ending")
+                finished = True
+                break
+
+            print(f"Recognized: {cleanedText}")
+            translation = translator.translate(cleanedText, dest='fr')
+            print(f"Translation: {translation.text}")
+            bToEn = translator.translate(translation.text, dest='en')
+            print(f"Back to English: {bToEn.text}")
+
+    except Exception as e:
+        if sr.UnknownValueError():
+            recognizer = sr.Recognizer()
+            continue
+        pass
